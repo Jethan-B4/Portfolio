@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jethan Benedict Barcenas — Information Systems Developer</title>
+  <meta name="description" content="Portfolio of Jethan Benedict M. Barcenas, an Information Systems developer building civic and cultural software from Camarines Sur, Philippines." />
+
+  <!-- Fonts: Fraunces (display), Inter (body), JetBrains Mono (labels/data) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ============ NAV ============ -->
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a href="#top" class="brand">Jethan<span class="brand-dot">.</span></a>
+
+      <nav class="nav" id="nav">
+        <a href="#work">Work</a>
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ============ HERO ============ -->
+    <section class="hero wrap" id="hero">
+      <div class="hero-text">
+        <p class="eyebrow">Information Systems Developer &mdash; Camarines Sur, PH</p>
+        <h1 class="hero-title">
+          I build systems that keep <em>processes honest</em><br class="lb" />
+          and <em>places remembered</em>.
+        </h1>
+        <p class="hero-sub">
+          An Information Systems developer who moves between government workflow automation
+          and gamified cultural preservation &mdash; from a procurement platform for the
+          Department of Agrarian Reform to a game about the town of Tinambac.
+        </p>
+        <div class="hero-actions">
+          <a href="#work" class="btn btn-primary">See the work</a>
+          <a href="https://github.com/Jethan-B4" target="_blank" rel="noopener" class="btn btn-ghost">GitHub ↗</a>
+        </div>
+      </div>
+
+      <!-- Signature element: system status readout -->
+      <div class="status-panel" aria-label="Profile summary">
+        <div class="status-row status-head">
+          <span class="dot dot-live"></span>
+          <span>STATUS.LOG</span>
+        </div>
+        <dl class="status-list">
+          <div class="status-item">
+            <dt>name</dt>
+            <dd>Jethan Benedict M. Barcenas</dd>
+          </div>
+          <div class="status-item">
+            <dt>role</dt>
+            <dd>Information Systems Developer</dd>
+          </div>
+          <div class="status-item">
+            <dt>based_in</dt>
+            <dd>Tinambac, Camarines Sur, PH</dd>
+          </div>
+          <div class="status-item">
+            <dt>current_focus</dt>
+            <dd>DAR&ndash;PMAS Procurement System</dd>
+          </div>
+          <div class="status-item">
+            <dt>availability</dt>
+            <dd><span class="dot dot-live small"></span> Open to opportunities</dd>
+          </div>
+        </dl>
+        <svg class="contour" viewBox="0 0 400 80" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M0 60 Q 40 20 80 55 T 160 45 T 240 60 T 320 35 T 400 55 V80 H0 Z" fill="var(--surface-2)"/>
+          <path d="M0 68 Q 50 40 100 65 T 200 60 T 300 68 T 400 62 V80 H0 Z" fill="var(--surface-3)"/>
+        </svg>
+      </div>
+    </section>
+
+    <!-- ============ ABOUT ============ -->
+    <section class="about wrap" id="about">
+      <p class="section-label">01 — About</p>
+      <p class="about-text">
+        I'm an Information Systems graduate from Naga College Foundation with hands-on experience
+        spanning full-stack development, database administration, and interactive design. My work
+        sits at an unusual intersection: helping a government office automate paper-heavy procurement,
+        and helping a small town turn its local culture into something playable. Both projects taught
+        me the same lesson &mdash; good software is mostly good listening, translated into structure.
+      </p>
+      <div class="about-grid">
+        <div class="about-card">
+          <p class="about-card-label">Education</p>
+          <p class="about-card-title">BS Information Systems</p>
+          <p class="about-card-sub">Naga College Foundation</p>
+        </div>
+        <div class="about-card">
+          <p class="about-card-label">Education</p>
+          <p class="about-card-title">General Academic Strand</p>
+          <p class="about-card-sub">Tamban National High School</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ WORK / PROJECTS ============ -->
+    <section class="work wrap" id="work">
+      <p class="section-label">02 — Selected work</p>
+      <h2 class="section-title">Projects</h2>
+
+      <!-- Project cards are rendered by script.js from the PROJECTS array,
+           so you can add/edit a project by editing only the data in script.js -->
+      <div class="project-list" id="projectList"></div>
+    </section>
+
+    <!-- ============ SKILLS ============ -->
+    <section class="skills wrap" id="skills">
+      <p class="section-label">03 — Toolkit</p>
+      <h2 class="section-title">Skills &amp; Certifications</h2>
+
+      <div class="skills-grid">
+        <div class="skills-col">
+          <p class="skills-col-title">Technical Skills</p>
+          <!-- Edit SKILLS array in script.js to change these -->
+          <ul class="tag-list" id="skillList"></ul>
+        </div>
+        <div class="skills-col">
+          <p class="skills-col-title">Certifications</p>
+          <!-- Edit CERTS array in script.js to change these -->
+          <ul class="stamp-list" id="certList"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CONTACT ============ -->
+    <section class="contact wrap" id="contact">
+      <p class="section-label">04 — Contact</p>
+      <h2 class="section-title contact-title">Let's build something worth remembering.</h2>
+      <p class="contact-sub">Open to internships, junior developer roles, and collaborations on civic or cultural tech.</p>
+
+      <div class="contact-grid">
+        <a class="contact-link" href="mailto:barcenasbenedict@gmail.com" id="emailLink">
+          <span class="contact-link-label">Email</span>
+          <span class="contact-link-value">barcenasbenedict@gmail.com</span>
+        </a>
+        <a class="contact-link" href="tel:+639708690200">
+          <span class="contact-link-label">Phone</span>
+          <span class="contact-link-value">+63 970 869 0200</span>
+        </a>
+        <a class="contact-link" href="https://github.com/Jethan-B4" target="_blank" rel="noopener">
+          <span class="contact-link-label">GitHub</span>
+          <span class="contact-link-value">github.com/Jethan-B4</span>
+        </a>
+        <div class="contact-link contact-link-static">
+          <span class="contact-link-label">Location</span>
+          <span class="contact-link-value">Tinambac, Camarines Sur, PH</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <p>© <span id="year"></span> Jethan Benedict M. Barcenas.</p>
+      <p class="footer-note">Built with plain HTML, CSS &amp; JS.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
