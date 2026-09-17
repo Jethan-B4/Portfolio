@@ -28,14 +28,12 @@ const PROJECTS = [
     ]
   },
   {
-    status: "Personal project",
-    title: "Tsujiri Project",
+    status: "Course project, 2026",
+    title: "Full-Stack Financial Dashboard (Next.js App Router)",
     description:
-      "A front-end build exploring layout, styling, and interaction patterns outside of coursework — used as a sandbox for sharpening HTML/CSS fundamentals.",
-    tags: ["HTML", "CSS", "Front-end"],
-    links: [
-      { label: "Repo ↗", url: "https://github.com/Jethan-B4/Tsujiri-Project" }
-    ]
+      "A hands-on build from Vercel's Next.js App Router Fundamentals course. Covers the App Router, React Server Components, styling with CSS Modules and Tailwind, data fetching and mutations via Server Actions, PostgreSQL integration, static vs. dynamic rendering, search and pagination, authentication, and deployment to Vercel.",
+    tags: ["Next.js", "React", "PostgreSQL", "Tailwind CSS"],
+    links: []
   }
 ];
 
@@ -48,9 +46,26 @@ const SKILLS = [
 ];
 
 const CERTS = [
-  "Microsoft Excel Associate Certificate",
-  "PhilNITS Information Technology Passport",
-  "Introduction to Cybersecurity I Certificate"
+  {
+    title: "Microsoft Office Specialist: Excel Associate (Microsoft 365 Apps)",
+    provider: "Microsoft",
+    issued: "December 2023"
+  },
+  {
+    title: "PhilNITS Information Technology Passport Certification",
+    provider: "PhilNITS",
+    issued: "April 2025"
+  },
+  {
+    title: "Introduction to Cybersecurity 1",
+    provider: "East West International Educational Specialists, Inc.",
+    issued: "August 2026"
+  },
+  {
+    title: "Next.js App Router Fundamentals",
+    provider: "Vercel",
+    issued: "September 2026"
+  }
 ];
 
 /* =========================================================
@@ -93,7 +108,16 @@ function renderSkills() {
   }
   if (certList) {
     certList.innerHTML = CERTS
-      .map((cert) => `<li><span class="stamp-mark">[✓]</span>${cert}</li>`)
+      .map(
+        (cert) => `
+        <li>
+          <span class="stamp-mark">[✓]</span>
+          <span class="cert-info">
+            <span class="cert-title">${cert.title}</span>
+            <span class="cert-meta">${cert.provider} &middot; ${cert.issued}</span>
+          </span>
+        </li>`
+      )
       .join("");
   }
 }

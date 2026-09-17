@@ -542,7 +542,7 @@ section:not(.hero) {
 
 .stamp-list li {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 16px;
   background: var(--surface);
   border: 1px dashed var(--border);
@@ -561,6 +561,25 @@ section:not(.hero) {
   color: var(--accent);
   font-size: 0.9rem;
   font-weight: 500;
+  margin-top: 2px;
+}
+
+.cert-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cert-title {
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.cert-meta {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
 }
 
 /* =========================================================
