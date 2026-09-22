@@ -45,32 +45,60 @@ const SKILLS = [
   "Design & Visualization"
 ];
 
+
 const CERTS = [
   {
     title: "Microsoft Office Specialist: Excel Associate (Microsoft 365 Apps)",
     provider: "Microsoft",
-    issued: "December 2023"
+    issued: "December 2023",
+    certId: "d2f4b84c-e171-401e-877f-a7ff4c8f5bf4",
+    description:
+      "Microsoft Excel certification earners have a fundamental understanding of Excel and the ability to complete tasks independently. Earners have proven they can create and edit a workbook with multiple sheets, and use graphic elements to represent data visually including professional-looking budgets, financial statements, performance charts, and data-entry logs. Excel earners include students, business professionals, clerical workers, bookkeepers, and others.",
+    link: "https://www.credly.com/badges/d2f4b84c-e171-401e-877f-a7ff4c8f5bf4/public_url"
   },
   {
     title: "PhilNITS Information Technology Passport Certification",
     provider: "PhilNITS",
-    issued: "April 2025"
+    issued: "April 2025",
+    certId: "IP10-0044",
+    description:
+      'Information Technology Professionals Examination Council (hereinafter called "ITPEC") is the organization for a common IT examination in Asian countries, ITPEC Examination. It was formed on November 2005 to co-ordinate all efforts of the member countries for ITPEC Examination in cooperation with IPA, Japan. ITPEC includes members from 6 countries (Philippines, Thailand, Vietnam, Myanmar, Mongolia, and Bangladesh).',
+    link: "https://www.itpec.org/statsandresults/all-passers-information/Philippines/2025S_IP.pdf" 
   },
   {
     title: "Introduction to Cybersecurity 1",
     provider: "East West International Educational Specialists, Inc.",
-    issued: "August 2026"
+    issued: "August 2026",
+    certId: "ad71faa4-9b90-4ed1-9ffb-12efa82e01f5",
+    description:
+      "Cyber security is the application of technologies, processes, and controls to protect systems, networks, programs, devices, and data. It aims to reduce the risk of cyber attacks and protect against the unauthorised exploitation of systems, networks, and technologies.",
+    link: "https://www.credly.com/badges/ad71faa4-9b90-4ed1-9ffb-12efa82e01f5/public_url" 
   },
   {
     title: "Next.js App Router Fundamentals",
     provider: "Vercel",
-    issued: "September 2026"
+    issued: "September 2026",
+    description:
+      "A hands-on course by Vercel that teaches the fundamentals of Next.js by building a full-stack financial dashboard app. It covers the App Router, React Server Components, styling (CSS Modules, Tailwind), routing and navigation, data fetching with Server Components, PostgreSQL integration, static vs. dynamic rendering, streaming, search and pagination, mutations with Server Actions, error handling, accessibility, and authentication, finishing with deployment to Vercel.",
+    link: "https://nextjs.org/learn/certificate?course=dashboard-app&user=169321&certId=dashboard-app-169321-1789282799769" 
   }
 ];
 
 /* =========================================================
    RENDERING
    ========================================================= */
+
+// A small badge icon reused for every certification card.
+const CERT_ICON = `
+  <svg class="cert-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <rect x="6" y="4" width="22" height="30" rx="3" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.5"/>
+    <line x1="11" y1="12" x2="23" y2="12" stroke="var(--accent-2)" stroke-width="1.6" stroke-linecap="round"/>
+    <line x1="11" y1="17" x2="23" y2="17" stroke="var(--border)" stroke-width="1.4" stroke-linecap="round"/>
+    <line x1="11" y1="22" x2="19" y2="22" stroke="var(--border)" stroke-width="1.4" stroke-linecap="round"/>
+    <circle cx="27" cy="27" r="8" fill="var(--accent)" stroke="var(--bg)" stroke-width="2"/>
+    <path d="M23.6 27.1l2 2 4-4.4" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+`;
 
 function renderProjects() {
   const list = document.getElementById("projectList");
@@ -108,18 +136,68 @@ function renderSkills() {
   }
   if (certList) {
     certList.innerHTML = CERTS
-      .map(
-        (cert) => `
-        <li>
-          <span class="stamp-mark">[✓]</span>
-          <span class="cert-info">
-            <span class="cert-title">${cert.title}</span>
-            <span class="cert-meta">${cert.provider} &middot; ${cert.issued}</span>
-          </span>
-        </li>`
-      )
+      .map((cert, i) => {
+        const descId = `cert-desc-${i}`;
+        const hasDescription = Boolean(cert.description);
+
+        const idRow = cert.certId
+          ? `<p class="cert-meta">Certification ID: ${cert.certId}</p>`
+          : "";
+
+        const actions = `
+          <div class="cert-actions">
+            ${
+              hasDescription
+                ? `<button type="button" class="cert-toggle" data-target="${descId}" aria-expanded="false">Show description</button>
+                   <span class="cert-actions-sep">&middot;</span>`
+                : ""
+            }
+            <a class="cert-link" href="${cert.link || "#"}" target="_blank" rel="noopener">View certification link</a>
+          </div>`;
+
+        const description = hasDescription
+          ? `<p class="cert-desc" id="${descId}" hidden>${cert.description}</p>`
+          : "";
+
+        return `
+          <li class="cert-card">
+            <div class="cert-icon-wrap">${CERT_ICON}</div>
+            <div class="cert-body">
+              <p class="cert-title">${cert.title}</p>
+              <p class="cert-meta">Provider: ${cert.provider}</p>
+              <p class="cert-meta">Issued: ${cert.issued}</p>
+              ${idRow}
+              ${actions}
+              ${description}
+            </div>
+          </li>`;
+      })
       .join("");
   }
+}
+
+function setupCertToggles() {
+  const certList = document.getElementById("certList");
+  if (!certList) return;
+
+  certList.addEventListener("click", (event) => {
+    const button = event.target.closest(".cert-toggle");
+    if (!button) return;
+
+    const target = document.getElementById(button.dataset.target);
+    if (!target) return;
+
+    const isHidden = target.hasAttribute("hidden");
+    if (isHidden) {
+      target.removeAttribute("hidden");
+      button.textContent = "Hide description";
+      button.setAttribute("aria-expanded", "true");
+    } else {
+      target.setAttribute("hidden", "");
+      button.textContent = "Show description";
+      button.setAttribute("aria-expanded", "false");
+    }
+  });
 }
 
 /* =========================================================
@@ -174,13 +252,44 @@ function setupFooterYear() {
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 }
 
+// Highlights the nav link for whichever section currently sits in the
+// vertical center band of the viewport, as the user scrolls.
+function setupScrollSpy() {
+  const navLinks = Array.from(document.querySelectorAll(".nav a"));
+  if (!navLinks.length || !("IntersectionObserver" in window)) return;
+
+  const sections = navLinks
+    .map((link) => document.querySelector(link.getAttribute("href")))
+    .filter(Boolean);
+  if (!sections.length) return;
+
+  const setActive = (id) => {
+    navLinks.forEach((link) => {
+      link.classList.toggle("is-active", link.getAttribute("href") === `#${id}`);
+    });
+  };
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) setActive(entry.target.id);
+      });
+    },
+    { rootMargin: "-45% 0px -50% 0px", threshold: 0 }
+  );
+
+  sections.forEach((section) => observer.observe(section));
+}
+
 /* =========================================================
    INIT
    ========================================================= */
 document.addEventListener("DOMContentLoaded", () => {
   renderProjects();
   renderSkills();
+  setupCertToggles();
   setupNavToggle();
   setupScrollReveal();
   setupFooterYear();
+  setupScrollSpy();
 });
