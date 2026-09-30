@@ -39,6 +39,7 @@ const PROJECTS = [
 
 const SKILLS = [
   "Web Development",
+  "Cybersecurity",
   "Mobile App Development",
   "Database Management",
   "Internet of Things (IoT)",
@@ -64,6 +65,14 @@ const CERTS = [
     description:
       'Information Technology Professionals Examination Council (hereinafter called "ITPEC") is the organization for a common IT examination in Asian countries, ITPEC Examination. It was formed on November 2005 to co-ordinate all efforts of the member countries for ITPEC Examination in cooperation with IPA, Japan. ITPEC includes members from 6 countries (Philippines, Thailand, Vietnam, Myanmar, Mongolia, and Bangladesh).',
     link: "https://www.itpec.org/statsandresults/all-passers-information/Philippines/2025S_IP.pdf" 
+  },  {
+    title: "Introduction to Cybersecurity",
+    provider: "Cisco",
+    issued: "September 2026",
+    certId: "e222ede1-5359-421f-9026-f3ac039925ab",
+    description:
+      "Cisco verifies the earner of this badge successfully completed the Introduction to Cybersecurity course. The holder of this student-level credential has introductory knowledge of cybersecurity, including the global implications of cyber threats on industries, and why cybersecurity is a growing profession. They understand vulnerabilities and threat detection and defense. They also have insight into opportunities available with pursuing cybersecurity certifications.",
+    link: "https://www.credly.com/badges/e222ede1-5359-421f-9026-f3ac039925ab/public_url" 
   },
   {
     title: "Introduction to Cybersecurity 1",
