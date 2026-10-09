@@ -16,6 +16,9 @@
 </head>
 <body>
 
+  <!-- Toast notifications: script.js fills this in after a contact-form submit -->
+  <div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
   <!-- ============ NAV ============ -->
   <header class="site-header">
     <div class="wrap header-inner">
@@ -158,10 +161,10 @@
       <p class="contact-sub">Open to internships, junior developer roles (part-time or full-time), and freelance opportunities.</p>
 
       <div class="contact-grid">
-        <a class="contact-link" href="mailto:barcenasbenedict@gmail.com" id="emailLink">
+        <button class="contact-link" id="emailBtn" type="button">
           <span class="contact-link-label">Email</span>
           <span class="contact-link-value">barcenasbenedict@gmail.com</span>
-        </a>
+        </button>
         <a class="contact-link" href="tel:+639708690200">
           <span class="contact-link-label">Phone</span>
           <span class="contact-link-value">+63 970 869 0200</span>
@@ -182,6 +185,73 @@
     </section>
 
   </main>
+
+  <!-- Contact Modal -->
+  <div id="contactModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-overlay" id="modalOverlay"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitle" class="modal-title">Send a Message</h2>
+        <button type="button" class="modal-close" id="modalClose" aria-label="Close modal">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      
+      <!--
+        TODO: replace YOUR_EMAIL_HERE with your real address (both here and in
+        the FORM_ENDPOINT constant in script.js). FormSubmit.co requires no
+        signup — your first real submission triggers a one-time confirmation
+        email you click to activate the address. See the chat reply for
+        alternatives if you'd rather not use FormSubmit.
+
+        The action/method below are a no-JS fallback only (FormSubmit redirects
+        to a plain thank-you page in that case). With JS enabled, script.js
+        intercepts the submit and posts to the AJAX endpoint instead so it can
+        show the success/failed/error toast.
+      -->
+      <form
+        id="contactForm"
+        class="contact-form"
+        action="https://formsubmit.co/barcenasbenedict@gmail.com"
+        method="POST"
+      >
+        <div class="form-group">
+          <label for="name" class="form-label">Name</label>
+          <input type="text" id="name" name="name" class="form-input" required placeholder="Your name">
+        </div>
+        
+        <div class="form-group">
+          <label for="email" class="form-label">Email</label>
+          <input type="email" id="email" name="email" class="form-input" required placeholder="your.email@example.com">
+        </div>
+        
+        <div class="form-group">
+          <label for="subject" class="form-label">Subject</label>
+          <input type="text" id="subject" name="subject" class="form-input" required placeholder="Subject of your message">
+        </div>
+        
+        <div class="form-group">
+          <label for="message" class="form-label">Message</label>
+          <textarea id="message" name="message" class="form-textarea" required placeholder="Your message here..." rows="5"></textarea>
+        </div>
+
+        <!-- FormSubmit.co config fields: https://formsubmit.co/documentation -->
+        <input type="hidden" name="_subject" value="New message from portfolio contact form">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="false">
+        <!-- Honeypot: left blank by humans, filled in by most spam bots -->
+        <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+        
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Send Message</button>
+          <button type="button" class="btn btn-ghost" id="modalCancel">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <footer class="site-footer">
     <div class="wrap footer-inner">

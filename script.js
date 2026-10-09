@@ -33,7 +33,9 @@ const PROJECTS = [
     description:
       "A hands-on build from Vercel's Next.js App Router Fundamentals course. Covers the App Router, React Server Components, styling with CSS Modules and Tailwind, data fetching and mutations via Server Actions, PostgreSQL integration, static vs. dynamic rendering, search and pagination, authentication, and deployment to Vercel.",
     tags: ["Next.js", "React", "PostgreSQL", "Tailwind CSS"],
-    links: []
+    links: [
+      { label: "Project Repo ↗", url: "https://github.com/Jethan-B4/Next.js-Project" }
+    ]
   }
 ];
 
@@ -291,6 +293,169 @@ function setupScrollSpy() {
 }
 
 /* =========================================================
+   TOAST NOTIFICATIONS
+   type is "success" | "failed" | "error" — matches the
+   .toast--success / .toast--failed / .toast--error CSS.
+   ========================================================= */
+function showToast(type, title, message) {
+  const container = document.getElementById("toastContainer");
+  if (!container) return;
+
+  const toast = document.createElement("div");
+  toast.className = `toast toast--${type}`;
+  toast.setAttribute("role", "status");
+  toast.innerHTML = `
+    <span class="toast-dot" aria-hidden="true"></span>
+    <div class="toast-body">
+      <p class="toast-title">${title}</p>
+      <p class="toast-message">${message}</p>
+    </div>
+    <button type="button" class="toast-close" aria-label="Dismiss notification">&times;</button>
+  `;
+  container.appendChild(toast);
+
+  // Next frame, so the opacity/transform transition actually runs
+  requestAnimationFrame(() => toast.classList.add("is-visible"));
+
+  let dismissTimer;
+  const remove = () => {
+    clearTimeout(dismissTimer);
+    toast.classList.remove("is-visible");
+    toast.addEventListener("transitionend", () => toast.remove(), { once: true });
+  };
+
+  toast.querySelector(".toast-close").addEventListener("click", remove);
+  dismissTimer = setTimeout(remove, 6000);
+}
+
+/* =========================================================
+   CONTACT MODAL
+   ========================================================= */
+function setupContactModal() {
+  // TODO: replace YOUR_EMAIL_HERE with your real address — same one used
+  // in the form's action="" attribute in index.html / contact-modal.html.
+  // FormSubmit.co needs no account: the first real submission sends a
+  // one-time confirmation email to that address, which you click once to
+  // activate it. Docs: https://formsubmit.co/documentation
+  const FORM_ENDPOINT = "https://formsubmit.co/ajax/barcenasbenedict@gmail.com";
+
+  const modal = document.getElementById("contactModal");
+  const modalOverlay = document.getElementById("modalOverlay");
+  const modalClose = document.getElementById("modalClose");
+  const modalCancel = document.getElementById("modalCancel");
+  const emailBtn = document.getElementById("emailBtn");
+  const contactForm = document.getElementById("contactForm");
+
+  if (!modal || !emailBtn) return;
+
+  const openModal = () => {
+    modal.classList.add("is-open");
+    document.body.style.overflow = "hidden";
+    // Focus on first input
+    setTimeout(() => {
+      const firstInput = modal.querySelector("input");
+      if (firstInput) firstInput.focus();
+    }, 100);
+  };
+
+  const closeModal = () => {
+    modal.classList.remove("is-open");
+    document.body.style.overflow = "";
+  };
+
+  // Open modal when email button is clicked
+  emailBtn.addEventListener("click", (e) => {
+    openModal();
+  });
+
+  // Close modal when overlay is clicked
+  if (modalOverlay) {
+    modalOverlay.addEventListener("click", closeModal);
+  }
+
+  // Close modal when close button is clicked
+  if (modalClose) {
+    modalClose.addEventListener("click", closeModal);
+  }
+
+  // Close modal when cancel button is clicked
+  if (modalCancel) {
+    modalCancel.addEventListener("click", closeModal);
+  }
+
+  // Close modal when Escape key is pressed
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && modal.classList.contains("is-open")) {
+      closeModal();
+    }
+  });
+
+  // Handle form submission: POST straight to FormSubmit's AJAX endpoint
+  // (no page reload, no mail client popup) and show a toast based on
+  // whatever the fetch actually resolves to.
+  if (contactForm) {
+    const submitBtn = contactForm.querySelector('button[type="submit"]');
+
+    contactForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      // Respect the form's own HTML5 validation (required fields, email format)
+      if (!contactForm.checkValidity()) {
+        contactForm.reportValidity();
+        return;
+      }
+
+      const originalLabel = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Sending…";
+
+      const formData = new FormData(contactForm);
+      // Use whatever the sender actually typed as the email's subject line
+      const subject = formData.get("subject");
+      if (subject) formData.set("_subject", subject);
+
+      try {
+        const response = await fetch(FORM_ENDPOINT, {
+          method: "POST",
+          headers: { Accept: "application/json" },
+          body: formData,
+        });
+
+        if (response.ok) {
+          // Success: the message actually left the browser and was accepted
+          showToast(
+            "success",
+            "Message sent",
+            "Thanks for reaching out — I'll get back to you soon."
+          );
+          contactForm.reset();
+          closeModal();
+        } else {
+          // Failed: we got a response, but the server reported a problem
+          // (bad endpoint, unconfirmed address, rate limit, etc.)
+          showToast(
+            "failed",
+            "Message not sent",
+            "Something went wrong on the server's end. Please try again, or email me directly."
+          );
+        }
+      } catch (err) {
+        // Error: the request itself never completed — offline, blocked,
+        // DNS failure, CORS, etc. Distinct from a server-side failure.
+        showToast(
+          "error",
+          "Couldn't connect",
+          "Check your internet connection and try again."
+        );
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalLabel;
+      }
+    });
+  }
+}
+
+/* =========================================================
    INIT
    ========================================================= */
 document.addEventListener("DOMContentLoaded", () => {
@@ -301,4 +466,5 @@ document.addEventListener("DOMContentLoaded", () => {
   setupScrollReveal();
   setupFooterYear();
   setupScrollSpy();
+  setupContactModal();
 });
