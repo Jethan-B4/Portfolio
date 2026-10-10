@@ -337,7 +337,7 @@ function setupContactModal() {
   // FormSubmit.co needs no account: the first real submission sends a
   // one-time confirmation email to that address, which you click once to
   // activate it. Docs: https://formsubmit.co/documentation
-  const FORM_ENDPOINT = "https://formsubmit.co/ajax/YOUR_EMAIL_HERE";
+  const FORM_ENDPOINT = "https://formsubmit.co/ajax/93cc9484fd303ab92acc509fe96cbd46";
 
   const modal = document.getElementById("contactModal");
   const modalOverlay = document.getElementById("modalOverlay");
