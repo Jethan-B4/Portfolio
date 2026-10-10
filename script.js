@@ -337,7 +337,7 @@ function setupContactModal() {
   // FormSubmit.co needs no account: the first real submission sends a
   // one-time confirmation email to that address, which you click once to
   // activate it. Docs: https://formsubmit.co/documentation
-  const FORM_ENDPOINT = "https://formsubmit.co/ajax/barcenasbenedict@gmail.com";
+  const FORM_ENDPOINT = "https://formsubmit.co/ajax/YOUR_EMAIL_HERE";
 
   const modal = document.getElementById("contactModal");
   const modalOverlay = document.getElementById("modalOverlay");
@@ -396,14 +396,46 @@ function setupContactModal() {
   if (contactForm) {
     const submitBtn = contactForm.querySelector('button[type="submit"]');
 
-    contactForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
+    // A page opened straight from disk (file:///…/index.html, i.e. someone
+    // just double-clicked it) can never fetch() a cross-origin URL — that's
+    // a hard browser restriction tied to the file: scheme itself, not
+    // something a server's CORS headers can opt back into. A *plain* <form>
+    // POST navigation isn't subject to that restriction, though, so that's
+    // the one case we deliberately don't intercept with JS at all.
+    const canUseAjax = window.location.protocol !== "file:";
 
+    // Point FormSubmit's non-AJAX redirect back at this exact page (with a
+    // ?sent=true flag) instead of its generic "thank you" page, so a visitor
+    // who lands on a *hosted* copy of the site (GitHub Pages, your own
+    // domain, etc.) still sees our toast after the round trip — see
+    // checkForRedirectToast() below. This has no effect on file:// (the
+    // browser can't redirect a remote page back to a local file, so
+    // FormSubmit's own thank-you page is shown there instead — expected).
+    let nextField = contactForm.querySelector('input[name="_next"]');
+    if (!nextField) {
+      nextField = document.createElement("input");
+      nextField.type = "hidden";
+      nextField.name = "_next";
+      contactForm.appendChild(nextField);
+    }
+    nextField.value = `${location.origin}${location.pathname}?sent=true`;
+
+    contactForm.addEventListener("submit", async (e) => {
       // Respect the form's own HTML5 validation (required fields, email format)
       if (!contactForm.checkValidity()) {
+        e.preventDefault();
         contactForm.reportValidity();
         return;
       }
+
+      if (!canUseAjax) {
+        // Let the browser submit the form the old-fashioned way, straight
+        // to the plain (non-AJAX) FormSubmit endpoint already set as this
+        // form's action="". No preventDefault — the email still sends.
+        return;
+      }
+
+      e.preventDefault();
 
       const originalLabel = submitBtn.textContent;
       submitBtn.disabled = true;
@@ -440,19 +472,45 @@ function setupContactModal() {
           );
         }
       } catch (err) {
-        // Error: the request itself never completed — offline, blocked,
-        // DNS failure, CORS, etc. Distinct from a server-side failure.
+        // Error: the fetch itself never completed — offline, blocked by an
+        // extension or a host's CORS policy, DNS failure, etc. Rather than
+        // just telling the visitor it failed (when the message might still
+        // go through), fall back to a real form submission — exactly the
+        // same path used for file:// above.
         showToast(
           "error",
-          "Couldn't connect",
-          "Check your internet connection and try again."
+          "Switching to backup delivery",
+          "Your browser will redirect for a moment to finish sending this."
         );
-      } finally {
         submitBtn.disabled = false;
         submitBtn.textContent = originalLabel;
+        setTimeout(() => contactForm.submit(), 1200);
+        return;
       }
+
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalLabel;
     });
   }
+}
+
+// If FormSubmit's non-AJAX redirect (the "_next" field above) sent the
+// visitor back here after a successful native submission, show the same
+// success toast they'd have seen from the AJAX path, then clean the URL.
+function checkForRedirectToast() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("sent") !== "true") return;
+
+  showToast(
+    "success",
+    "Message sent",
+    "Thanks for reaching out — I'll get back to you soon."
+  );
+
+  params.delete("sent");
+  const query = params.toString();
+  const cleanUrl = window.location.pathname + (query ? `?${query}` : "") + window.location.hash;
+  window.history.replaceState({}, document.title, cleanUrl);
 }
 
 /* =========================================================
@@ -467,4 +525,5 @@ document.addEventListener("DOMContentLoaded", () => {
   setupFooterYear();
   setupScrollSpy();
   setupContactModal();
+  checkForRedirectToast();
 });

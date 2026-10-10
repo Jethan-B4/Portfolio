@@ -12,7 +12,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="icon" href="public/favicon_portfolio_jb.png" type="image/png" />
 
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles/styles.css" />
+  <link rel="stylesheet" href="styles/modal-styles.css" />
 </head>
 <body>
 
@@ -215,7 +216,7 @@
       <form
         id="contactForm"
         class="contact-form"
-        action="https://formsubmit.co/barcenasbenedict@gmail.com"
+        action="https://formsubmit.co/YOUR_EMAIL_HERE"
         method="POST"
       >
         <div class="form-group">
@@ -242,6 +243,14 @@
         <input type="hidden" name="_subject" value="New message from portfolio contact form">
         <input type="hidden" name="_template" value="table">
         <input type="hidden" name="_captcha" value="false">
+        <!--
+          Where FormSubmit sends the visitor after a plain (non-AJAX) POST —
+          used on file:// pages and as a fallback if fetch() fails elsewhere.
+          script.js overwrites this with the real current URL + ?sent=true
+          on page load; the empty value here is just a placeholder so the
+          field still exists for visitors with JavaScript disabled.
+        -->
+        <input type="hidden" name="_next" value="">
         <!-- Honeypot: left blank by humans, filled in by most spam bots -->
         <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
         
