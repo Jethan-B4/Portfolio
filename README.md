@@ -37,4 +37,12 @@ You shouldn't need to touch the HTML for routine updates:
    - `https://Jethan-B4.github.io/YOUR-REPO-NAME/` (normal repo), or
    - `https://Jethan-B4.github.io/` (only if the repo is named exactly `Jethan-B4.github.io`)
 
+## CONTACT FORM
+
+The contact form uses FormSubmit.co for email delivery. To set it up:
+
+1. Go to https://formsubmit.co and sign up for an account (OPTIONAL - you can use any form service)
+2. Replace `YOUR_EMAIL_HERE` in `modules/contact-modal.html` with your actual email address
+3. The form will automatically send messages to your email when submitted
+
 No further configuration is needed — there's no build process to set up.
