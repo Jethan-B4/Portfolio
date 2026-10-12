@@ -3,6 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!--
+    Sets the light/dark theme BEFORE the stylesheets paint, so there's no
+    flash of the wrong theme. Priority: a saved choice from the switch
+    (localStorage) > the device's own light/dark setting. Kept inline and
+    tiny on purpose — this has to run synchronously, before <link> below.
+  -->
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem("theme");
+        var theme = saved || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        document.documentElement.setAttribute("data-theme", theme);
+      } catch (e) {
+        /* localStorage/matchMedia unavailable — styles.css still falls back
+           to @media (prefers-color-scheme) on its own */
+      }
+    })();
+  </script>
+
   <title>Jethan Benedict Barcenas — Information Systems Developer</title>
   <meta name="description" content="Portfolio of Jethan Benedict M. Barcenas, an Information Systems developer building civic and cultural software from Camarines Sur, Philippines." />
 
@@ -25,16 +45,34 @@
     <div class="wrap header-inner">
       <a href="#top" class="brand">Jethan<span class="brand-dot">.</span></a>
 
-      <nav class="nav" id="nav">
-        <a href="#about">About</a>
-        <a href="#work">Projects</a>
-        <a href="#skills">Skills</a>
-        <a href="#contact">Contact</a>
-      </nav>
+      <div class="header-right">
+        <nav class="nav" id="nav">
+          <a href="#about">About</a>
+          <a href="#work">Projects</a>
+          <a href="#skills">Skills</a>
+          <a href="#contact">Contact</a>
+        </nav>
 
-      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
+        <!--
+          aria-checked is a placeholder here — script.js sets the real value
+          from the theme the inline script above already chose, the instant
+          the page loads (before the user can interact with anything).
+        -->
+        <button type="button" class="theme-toggle" id="themeToggle" role="switch" aria-checked="false" aria-label="Switch to dark mode">
+          <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2M12 20v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2 12h2M20 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"></path>
+          </svg>
+          <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"></path>
+          </svg>
+          <span class="theme-toggle-thumb" aria-hidden="true"></span>
+        </button>
+
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -81,7 +119,7 @@
           </div>
           <div class="status-item">
             <dt>current_focus</dt>
-            <dd>Employment opportunities</dd>
+            <dd>DAR&ndash;PMAS Procurement System</dd>
           </div>
           <div class="status-item">
             <dt>availability</dt>

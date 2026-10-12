@@ -1,6 +1,17 @@
 /* =========================================================
    DESIGN TOKENS
    Edit the values below to re-theme the entire site.
+
+   Light is the default (:root). Dark is defined twice, on
+   purpose:
+     1. @media (prefers-color-scheme: dark), scoped to
+        :root:not([data-theme]) — auto-applies dark for anyone
+        whose OS/browser asks for it, as long as they haven't
+        used the switch yet (or have JS disabled).
+     2. :root[data-theme="dark"] — set by the inline script in
+        <head> (and updated by the switch in script.js), and
+        always wins once present since it's more specific than
+        the media query above.
    ========================================================= */
 :root {
   /* Colors */
@@ -17,6 +28,7 @@
   --accent-soft: #5cb85c;
   --accent-2: #20c997;      /* teal green */
 
+  --header-bg: rgba(255, 255, 255, 0.9);
 
   /* Type */
   --font-display: "Fraunces", Georgia, serif;
@@ -26,6 +38,49 @@
   /* Layout */
   --wrap: 100%;
   --radius: 10px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --bg: #0e1210;
+    --surface: #171c19;
+    --surface-2: #212724;
+    --surface-3: #2b322e;
+    --border: #333b36;
+
+    --text: #f1f3f1;
+    --text-muted: #9aa39d;
+
+    --accent: #34c759;
+    --accent-soft: #57d576;
+    --accent-2: #2fe0ae;
+
+    --header-bg: rgba(14, 18, 16, 0.85);
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #0e1210;
+  --surface: #171c19;
+  --surface-2: #212724;
+  --surface-3: #2b322e;
+  --border: #333b36;
+
+  --text: #f1f3f1;
+  --text-muted: #9aa39d;
+
+  --accent: #34c759;
+  --accent-soft: #57d576;
+  --accent-2: #2fe0ae;
+
+  --header-bg: rgba(14, 18, 16, 0.85);
+}
+
+/* Smooth cross-fade when the switch is used — scoped to a class JS adds
+   only after the first paint, so the initial theme never visibly transitions in */
+.theme-transition,
+.theme-transition * {
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease !important;
 }
 
 /* =========================================================
@@ -86,7 +141,7 @@ ul { list-style: none; margin: 0; padding: 0; }
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(255, 255, 255, 0.9);
+  background: var(--header-bg);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03);
@@ -155,6 +210,61 @@ ul { list-style: none; margin: 0; padding: 0; }
   display: block;
   transition: background 0.2s ease;
 }
+
+/* Groups nav + theme switch + burger on the right, so header-inner only
+   needs to space two things (brand, this group) instead of juggling three */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+/* ---------- Theme switch (light/dark) ---------- */
+.theme-toggle {
+  position: relative;
+  flex-shrink: 0;
+  width: 52px;
+  height: 28px;
+  padding: 3px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.theme-toggle:hover { border-color: var(--accent); }
+
+.theme-toggle-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--bg);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transform: translateX(0);
+  transition: transform 0.25s ease, background 0.25s ease;
+}
+.theme-toggle[aria-checked="true"] .theme-toggle-thumb {
+  transform: translateX(24px);
+}
+
+.theme-icon {
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  transition: color 0.2s ease;
+  pointer-events: none;
+}
+.theme-icon-sun { left: 6px; }
+.theme-icon-moon { right: 6px; }
+
+.theme-toggle[aria-checked="false"] .theme-icon-sun { color: var(--accent); }
+.theme-toggle[aria-checked="true"] .theme-icon-moon { color: var(--accent-2); }
 
 /* =========================================================
    HERO

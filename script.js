@@ -215,6 +215,59 @@ function setupCertToggles() {
    INTERACTIONS
    ========================================================= */
 
+/* =========================================================
+   THEME SWITCH (light / dark)
+   The inline script in index.html's <head> already set
+   documentElement's data-theme before anything painted, so this
+   just has to: sync the switch's visual/ARIA state to match, and
+   handle the user actually clicking it.
+   ========================================================= */
+function setupThemeToggle() {
+  const toggle = document.getElementById("themeToggle");
+  const root = document.documentElement;
+  if (!toggle) return;
+
+  const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)");
+
+  const applyTheme = (theme, { persist } = {}) => {
+    root.setAttribute("data-theme", theme);
+    toggle.setAttribute("aria-checked", String(theme === "dark"));
+    toggle.setAttribute("aria-label", theme === "dark" ? "Switch to light mode" : "Switch to dark mode");
+    if (persist) {
+      try {
+        localStorage.setItem("theme", theme);
+      } catch (e) {
+        /* private browsing / storage disabled — the switch still works for this visit */
+      }
+    }
+  };
+
+  // Reflect whatever theme the <head> script already applied
+  applyTheme(root.getAttribute("data-theme") === "dark" ? "dark" : "light");
+
+  toggle.addEventListener("click", () => {
+    // Fade colors instead of snapping, but only for this user-initiated
+    // change — never during the initial page load.
+    document.body.classList.add("theme-transition");
+    const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    applyTheme(next, { persist: true });
+    setTimeout(() => document.body.classList.remove("theme-transition"), 300);
+  });
+
+  // If the visitor never touched the switch (no saved preference), keep
+  // following the OS/browser setting live if it changes mid-visit.
+  systemPrefersDark.addEventListener("change", (e) => {
+    let saved = null;
+    try {
+      saved = localStorage.getItem("theme");
+    } catch (err) {
+      /* ignore */
+    }
+    if (saved) return; // an explicit choice always wins
+    applyTheme(e.matches ? "dark" : "light");
+  });
+}
+
 function setupNavToggle() {
   const toggle = document.getElementById("navToggle");
   const nav = document.getElementById("nav");
@@ -517,6 +570,7 @@ function checkForRedirectToast() {
    INIT
    ========================================================= */
 document.addEventListener("DOMContentLoaded", () => {
+  setupThemeToggle();
   renderProjects();
   renderSkills();
   setupCertToggles();
