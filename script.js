@@ -75,6 +75,14 @@ const CERTS = [
     description:
       "Cisco verifies the earner of this badge successfully completed the Introduction to Cybersecurity course. The holder of this student-level credential has introductory knowledge of cybersecurity, including the global implications of cyber threats on industries, and why cybersecurity is a growing profession. They understand vulnerabilities and threat detection and defense. They also have insight into opportunities available with pursuing cybersecurity certifications.",
     link: "https://www.credly.com/badges/e222ede1-5359-421f-9026-f3ac039925ab/public_url" 
+  }, {
+    title: "Networking Basics",
+    provider: "Cisco",
+    issued: "September 2026",
+    certId: "37ab5164-da3c-402b-9907-288665de1837",
+    description:
+      "Cisco verifies the earner of this badge successfully completed the Networking Basics course and achieved this student level credential. Earner has knowledge of the types of networks, how they work, how devices send and receive data, the types of network cabling, how IP addresses find information on the Internet, how transport and applications operate, and has practiced building a home wireless network. Participated in up to 13 Cisco Packet Tracer activities.",
+    link: "https://www.credly.com/badges/37ab5164-da3c-402b-9907-288665de1837/public_url" 
   },
   {
     title: "Introduction to Cybersecurity 1",
@@ -98,6 +106,11 @@ const CERTS = [
 /* =========================================================
    RENDERING
    ========================================================= */
+
+// Certifications beyond this index start out hidden, behind the
+// "Show all" button rendered in renderSkills() / wired up in
+// setupCertShowAll().
+const CERTS_VISIBLE_DEFAULT = 4;
 
 // A small badge icon reused for every certification card.
 const CERT_ICON = `
@@ -150,6 +163,7 @@ function renderSkills() {
       .map((cert, i) => {
         const descId = `cert-desc-${i}`;
         const hasDescription = Boolean(cert.description);
+        const isExtra = i >= CERTS_VISIBLE_DEFAULT;
 
         const idRow = cert.certId
           ? `<p class="cert-meta">Certification ID: ${cert.certId}</p>`
@@ -170,8 +184,10 @@ function renderSkills() {
           ? `<p class="cert-desc" id="${descId}" hidden>${cert.description}</p>`
           : "";
 
+        // Certs past the default visible count start hidden; the
+        // cert-card--extra class is what the show-all button looks for.
         return `
-          <li class="cert-card">
+          <li class="cert-card${isExtra ? " cert-card--extra" : ""}"${isExtra ? " hidden" : ""}>
             <div class="cert-icon-wrap">${CERT_ICON}</div>
             <div class="cert-body">
               <p class="cert-title">${cert.title}</p>
@@ -184,6 +200,19 @@ function renderSkills() {
           </li>`;
       })
       .join("");
+
+    // Only show the toggle button at all if there's actually something to hide
+    const showAllBtn = document.getElementById("certShowAllBtn");
+    if (showAllBtn) {
+      const extraCount = CERTS.length - CERTS_VISIBLE_DEFAULT;
+      if (extraCount > 0) {
+        showAllBtn.hidden = false;
+        showAllBtn.textContent = `Show all (+${extraCount})`;
+        showAllBtn.setAttribute("aria-expanded", "false");
+      } else {
+        showAllBtn.hidden = true;
+      }
+    }
   }
 }
 
@@ -207,6 +236,32 @@ function setupCertToggles() {
       target.setAttribute("hidden", "");
       button.textContent = "Show description";
       button.setAttribute("aria-expanded", "false");
+    }
+  });
+}
+
+// Shows/hides every .cert-card--extra (certs past CERTS_VISIBLE_DEFAULT) at
+// once, and flips the button between "Show all (+N)" and "Show less".
+function setupCertShowAll() {
+  const btn = document.getElementById("certShowAllBtn");
+  const certList = document.getElementById("certList");
+  if (!btn || !certList) return;
+
+  btn.addEventListener("click", () => {
+    const isExpanded = btn.getAttribute("aria-expanded") === "true";
+    const extraCards = certList.querySelectorAll(".cert-card--extra");
+
+    extraCards.forEach((card) => {
+      card.hidden = isExpanded;
+    });
+
+    btn.setAttribute("aria-expanded", String(!isExpanded));
+    btn.textContent = isExpanded ? `Show all (+${extraCards.length})` : "Show less";
+
+    // Collapsing back: bring the button itself into view so the person
+    // isn't left scrolled down next to now-hidden cards.
+    if (isExpanded) {
+      btn.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
   });
 }
@@ -574,6 +629,7 @@ document.addEventListener("DOMContentLoaded", () => {
   renderProjects();
   renderSkills();
   setupCertToggles();
+  setupCertShowAll();
   setupNavToggle();
   setupScrollReveal();
   setupFooterYear();

@@ -187,8 +187,14 @@
         </div>
         <div class="skills-col">
           <p class="skills-col-title">Certifications</p>
-          <!-- Edit CERTS array in script.js to change these -->
+          <!-- Edit CERTS array in script.js to change these. Only the first
+               4 render visible; script.js hides the rest behind the
+               show-all button below (hidden here until it knows there's
+               actually more than 4 to show). -->
           <ul class="stamp-list" id="certList"></ul>
+          <button type="button" class="cert-show-all" id="certShowAllBtn" aria-controls="certList" aria-expanded="false" hidden>
+            Show all
+          </button>
         </div>
       </div>
     </section>
@@ -207,8 +213,9 @@
       <p class="section-label">04 — Contact</p>
 
       <!-- Icon-led, not label-led: each item's old text label ("Email",
-           "Phone", "GitHub", "Resume") is kept as a screen-reader-only
-           name next to its icon, with only the value shown visually. -->
+           "Phone", "GitHub") is kept as a screen-reader-only name next to
+           its icon, with only the value shown visually. Resume/Download CV
+           removed from here — it's already in the hero actions above. -->
       <div class="contact-compact-grid">
         <button class="contact-icon-link" id="emailBtn" type="button">
           <span class="contact-icon" aria-hidden="true">
@@ -240,18 +247,6 @@
           </span>
           <span class="sr-only">GitHub:</span>
           <span class="contact-icon-value">github.com/Jethan-B4</span>
-        </a>
-
-        <a class="contact-icon-link" href="ats-cv.pdf" download="Jethan-Barcenas-CV.pdf">
-          <span class="contact-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 3v12"></path>
-              <path d="M7 10l5 5 5-5"></path>
-              <path d="M5 21h14"></path>
-            </svg>
-          </span>
-          <span class="sr-only">Resume:</span>
-          <span class="contact-icon-value">Download CV (PDF)</span>
         </a>
       </div>
     </section>

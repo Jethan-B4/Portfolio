@@ -763,6 +763,32 @@ section:not(.hero) {
 }
 .cert-desc[hidden] { display: none; }
 
+/* .cert-card sets display:flex itself, so the [hidden] attribute needs an
+   explicit override here — otherwise the card stays visible despite it */
+.cert-card[hidden] { display: none; }
+
+.cert-show-all {
+  display: block;
+  margin: 20px auto 0;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 22px;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+.cert-show-all:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--surface);
+}
+.cert-show-all[hidden] { display: none; }
+
 /* =========================================================
    CONTACT
    A compact, icon-led block instead of the old headline + five
@@ -789,9 +815,11 @@ section:not(.hero) {
 
 .contact-compact-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  /* 3 items (Email, Phone, GitHub) — one row on wide screens.
+     Collapses to a single column below 860px, see media query. */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
-  max-width: 560px;
+  max-width: 720px;
   margin: 0 auto;
 }
 
